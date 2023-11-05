@@ -6,14 +6,21 @@ FROM python:3.8.2
 ENV MKDOCS_VERSION="1.5.3"
 
 RUN apt-get install -y git && \
-    # clones latest version
-    git clone https://github.com/hfagerlund/mkdocs-docskimmer.git
-    # clone an alternative version - example: 
-    # git clone https://github.com/hfagerlund/mkdocs-docskimmer.git --branch v0.3.1
-WORKDIR /mkdocs-docskimmer
+    # RE: https://github.com/hfagerlund/mkdocs-docskimmer/discussions/18
 
-RUN pip install mkdocs==${MKDOCS_VERSION} && \
-    rm -r docs
+    ## clone latest version
+    ## git clone https://github.com/hfagerlund/mkdocs-docskimmer.git
+
+    ## clone an alternative version - example:
+    ## git clone https://github.com/hfagerlund/mkdocs-docskimmer.git --branch v0.3.1
+
+    ## pip install latest version
+    ## pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git
+
+    ## pip install branch
+    pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@issue-17_fix-config-value
+
+RUN pip install mkdocs==${MKDOCS_VERSION}
 
 COPY docs_local-updates docs
 RUN mkdocs build --clean
