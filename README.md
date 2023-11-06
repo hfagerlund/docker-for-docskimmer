@@ -12,41 +12,40 @@ $ sudo docker run -p 8000:8080 my-docskimmer
 
 ## Example output
 An excerpt of **successful build output** is shown below:
-> *(using MkDocs v1.5.3 with docSkimmer theme v0.4.0)*
+> *(using MkDocs v1.5.3 with docSkimmer theme 'master' branch)*
 
 ```console
 $ sudo docker build . -t my-docskimmer -f Dockerfile
-[+] Building 11.2s (12/12) FINISHED
- => [internal] load .dockerignore                                          0.2s
- => => transferring context: 2B                                            0.0s
- => [internal] load build definition from Dockerfile                       0.4s
- => => transferring dockerfile: 686B                                       0.0s
- => [internal] load metadata for docker.io/library/python:3.8.2            0.8s
- => [1/7] FROM docker.io/library/python:3.8.2@sha256:8c98602bf4f4b2f9b6bd  0.0s
- => [internal] load build context                                          0.2s
- => => transferring context: 18.65kB                                       0.0s
- => CACHED [2/7] RUN apt-get install -y git &&     git clone https://gith  0.0s
- => CACHED [3/7] WORKDIR /mkdocs-docskimmer                                0.0s
- => CACHED [4/7] RUN pip install mkdocs==1.5.3 &&     rm -r docs           0.0s
- => [5/7] COPY docs_local-updates docs                                     0.8s
- => [6/7] RUN mkdocs build --clean                                         2.4s
- => [7/7] RUN mkdocs --version                                             3.1s
- => exporting to image                                                     1.9s
- => => exporting layers                                                    1.8s
- => => writing image sha256:f67b0c96211b1d95031449d4fc952fc387f68df4be54b  0.0s
- => => naming to docker.io/library/my-docskimmer                           0.1s
-
+[+] Building 2.6s (12/12) FINISHED
+ => [internal] load .dockerignore                                                                    0.3s
+ => => transferring context: 2B                                                                      0.0s
+ => [internal] load build definition from Dockerfile                                                 0.5s
+ => => transferring dockerfile: 902B                                                                 0.0s
+ => [internal] load metadata for docker.io/library/python:3.8.2                                      0.6s
+ => [1/7] FROM docker.io/library/python:3.8.2@sha256:8c98602bf4f4b2f9b6bd8def396d5149821c59f8a69e74  0.0s
+ => [internal] load build context                                                                    0.2s
+ => => transferring context: 266B                                                                    0.0s
+ => CACHED [2/7] WORKDIR /build                                                                      0.0s
+ => CACHED [3/7] RUN pip install mkdocs==1.5.3 &&     mkdocs new my-project                          0.0s
+ => CACHED [4/7] RUN apt-get install -y git &&     pip install git+https://github.com/hfagerlund/mk  0.0s
+ => CACHED [5/7] RUN cd my-project                                                                   0.0s
+ => CACHED [6/7] COPY docs_local-updates ./my-project/docs                                           0.0s
+ => CACHED [7/7] RUN echo 'site_name: docker-for-docskimmer\ntheme:\n  name: docskimmer\n  include_  0.0s
+ => exporting to image                                                                               0.2s
+ => => exporting layers                                                                              0.0s
+ => => writing image sha256:d492c778359d31e425eced41632007f6ef537b2af36446ce9df770bf2c0097e6         0.1s
+ => => naming to docker.io/library/my-docskimmer                                                     0.1s
 ## NOTE: warnings (below) do not break the build
 
 $ sudo docker run -p 8000:8080 my-docskimmer
-WARNING -  Config value 'google_analytics': The configuration option google_analytics has been deprecated and will be removed in a future release of MkDocs. See the options available on your theme for an alternative.
 WARNING -  Config value 'dev_addr': The use of the IP address '0.0.0.0' suggests a production environment or the use of a proxy to connect to the MkDocs server. However, the MkDocs' server is intended for local development purposes only. Please use a third party production-ready server instead.
 INFO    -  Building documentation...
 INFO    -  Cleaning site directory
 INFO    -  Documentation built in 0.08 seconds
-INFO    -  [21:42:17] Watching paths for changes: 'docs', 'mkdocs.yml'
-INFO    -  [21:42:17] Serving on http://0.0.0.0:8080/mkdocs-docskimmer/
-INFO    -  [21:42:17] Browser connected: http://0.0.0.0:8000/mkdocs-docskimmer/
+INFO    -  [22:55:00] Watching paths for changes: 'my-project/docs', 'my-project/mkdocs.yml'
+INFO    -  [22:55:00] Serving on http://0.0.0.0:8080/
+INFO    -  [22:55:01] Browser connected: http://0.0.0.0:8000/search.html?q=sample
+INFO    -  [22:55:01] Browser connected: http://0.0.0.0:8000/
 ## ...
 ```
 
@@ -66,9 +65,21 @@ Specify the version numbers of any/all of the following in the [Dockerfile](http
 #### MkDocs
 * **line 6**: Specify [MkDocs version](https://github.com/mkdocs/mkdocs/releases/) (latest: **v1.5.3** - *at time of writing*);
 #### docSkimmer theme
-* **line 10**: Use this for [latest version of docSkimmer theme](https://github.com/hfagerlund/mkdocs-docskimmer/releases) (**v0.4.0** - *at time of writing*);
+* **line 15**: Specify the tag, release/version, or branch of [docSkimmer theme](https://github.com/hfagerlund/mkdocs-docskimmer/releases) (note: `master` branch contains the latest, unreleased changes since **v0.4.0**)
+  - **examples**
+  * install latest changes (ie. 'master' branch'):
+  ```
+  pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@master
+  ```
+  * install version 0.3.1:
+  ```
+  pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@v0.3.1
+  ```
+  * install experimental branch 'issue-17_fix-config-value':
+  ```
+  pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@issue-17_fix-config-value
+  ```
 
-* **...or** uncomment and modify **line 12**: to specify another version of docSkimmer theme - example: `v0.3.1` (also remove **line 10**)
 
 ### Nice to know
 <details>
