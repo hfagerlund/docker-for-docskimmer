@@ -66,7 +66,8 @@ Specify the version numbers of any/all of the following in the [Dockerfile](http
 * **line 6**: Specify [MkDocs version](https://github.com/mkdocs/mkdocs/releases/) (latest: **v1.5.3** - *at time of writing*);
 #### docSkimmer theme
 * **line 15**: Specify the tag, release/version, or branch of [docSkimmer theme](https://github.com/hfagerlund/mkdocs-docskimmer/releases) (note: `master` branch contains the latest, unreleased changes since **v0.4.0**)
-  **examples**
+
+  **examples** <br>
   * install latest changes (ie. 'master' branch'):
   ```
   pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@master
