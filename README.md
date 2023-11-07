@@ -16,36 +16,35 @@ An excerpt of **successful build output** is shown below:
 
 ```console
 $ sudo docker build . -t my-docskimmer -f Dockerfile
-[+] Building 2.6s (12/12) FINISHED
- => [internal] load .dockerignore                                                                    0.3s
+[+] Building 6.9s (11/11) FINISHED
+ => [internal] load .dockerignore                                                                    0.4s
  => => transferring context: 2B                                                                      0.0s
- => [internal] load build definition from Dockerfile                                                 0.5s
- => => transferring dockerfile: 902B                                                                 0.0s
- => [internal] load metadata for docker.io/library/python:3.8.2                                      0.6s
- => [1/7] FROM docker.io/library/python:3.8.2@sha256:8c98602bf4f4b2f9b6bd8def396d5149821c59f8a69e74  0.0s
+ => [internal] load build definition from Dockerfile                                                 0.3s
+ => => transferring dockerfile: 467B                                                                 0.0s
+ => [internal] load metadata for docker.io/library/python:3.8.2                                      0.9s
  => [internal] load build context                                                                    0.2s
- => => transferring context: 266B                                                                    0.0s
- => CACHED [2/7] WORKDIR /build                                                                      0.0s
- => CACHED [3/7] RUN pip install mkdocs==1.5.3 &&     mkdocs new my-project                          0.0s
- => CACHED [4/7] RUN apt-get install -y git &&     pip install git+https://github.com/hfagerlund/mk  0.0s
- => CACHED [5/7] RUN cd my-project                                                                   0.0s
- => CACHED [6/7] COPY docs_local-updates ./my-project/docs                                           0.0s
- => CACHED [7/7] RUN echo 'site_name: docker-for-docskimmer\ntheme:\n  name: docskimmer\n  include_  0.0s
- => exporting to image                                                                               0.2s
- => => exporting layers                                                                              0.0s
- => => writing image sha256:d492c778359d31e425eced41632007f6ef537b2af36446ce9df770bf2c0097e6         0.1s
+ => => transferring context: 618B                                                                    0.0s
+ => [1/6] FROM docker.io/library/python:3.8.2@sha256:8c98602bf4f4b2f9b6bd8def396d5149821c59f8a69e74  0.0s
+ => CACHED [2/6] WORKDIR /build                                                                      0.0s
+ => CACHED [3/6] COPY requirements.txt .                                                             0.0s
+ => CACHED [4/6] RUN pip install --no-cache-dir -r requirements.txt                                  0.0s
+ => [5/6] COPY docs_local-updates ./my-project/docs                                                  1.0s
+ => [6/6] COPY mkdocs.yml ./my-project/mkdocs.yml                                                    0.8s
+ => exporting to image                                                                               2.4s
+ => => exporting layers                                                                              2.2s
+ => => writing image sha256:0274aee1e791ec0f0af2df18b3df607c41b0640a9fe2e7af0cbed8d8e24a94ac         0.1s
  => => naming to docker.io/library/my-docskimmer                                                     0.1s
+
 ## NOTE: warnings (below) do not break the build
 
 $ sudo docker run -p 8000:8080 my-docskimmer
 WARNING -  Config value 'dev_addr': The use of the IP address '0.0.0.0' suggests a production environment or the use of a proxy to connect to the MkDocs server. However, the MkDocs' server is intended for local development purposes only. Please use a third party production-ready server instead.
 INFO    -  Building documentation...
 INFO    -  Cleaning site directory
-INFO    -  Documentation built in 0.08 seconds
-INFO    -  [22:55:00] Watching paths for changes: 'my-project/docs', 'my-project/mkdocs.yml'
-INFO    -  [22:55:00] Serving on http://0.0.0.0:8080/
-INFO    -  [22:55:01] Browser connected: http://0.0.0.0:8000/search.html?q=sample
-INFO    -  [22:55:01] Browser connected: http://0.0.0.0:8000/
+INFO    -  Documentation built in 0.29 seconds
+INFO    -  [00:38:37] Watching paths for changes: 'my-project/docs', 'my-project/mkdocs.yml'
+INFO    -  [00:38:37] Serving on http://0.0.0.0:8080/
+INFO    -  [00:38:39] Browser connected: http://0.0.0.0:8000/
 ## ...
 ```
 
@@ -59,15 +58,16 @@ INFO    -  [22:55:01] Browser connected: http://0.0.0.0:8000/
   * see `view-source:http://0.0.0.0:8000/mkdocs-docskimmer/` for version numbers of both the docSkimmer theme and MkDocs
 
 ### Specify Versions
-Specify the version numbers of any/all of the following in the [Dockerfile](https://github.com/hfagerlund/docker-for-docskimmer/blob/main/Dockerfile):
 #### Python
-* **line 3**: Specify Python version (for compatibility with MkDocs - refer to [user guide](https://www.mkdocs.org/user-guide/installation/));
-#### MkDocs
-* **line 6**: Specify [MkDocs version](https://github.com/mkdocs/mkdocs/releases/) (latest: **v1.5.3** - *at time of writing*);
-#### docSkimmer theme
-* **line 15**: Specify the tag, release/version, or branch of [docSkimmer theme](https://github.com/hfagerlund/mkdocs-docskimmer/releases) (note: `master` branch contains the latest, unreleased changes since **v0.4.0**)
+* **line 3** of the [Dockerfile](https://github.com/hfagerlund/docker-for-docskimmer/blob/main/Dockerfile#L3): Specify the Python version (for compatibility with MkDocs - refer to [user guide](https://www.mkdocs.org/user-guide/installation/);
 
-  **examples** <br>
+#### MkDocs
+* **line 1** of [requirements.txt](https://github.com/hfagerlund/docker-for-docskimmer/blob/main/requirements.txt#L1): Specify the [MkDocs version](https://github.com/mkdocs/mkdocs/releases/) - (latest: **v1.5.3** - *at time of writing*);
+
+#### docSkimmer theme
+* **line 2** of [requirements.txt](https://github.com/hfagerlund/docker-for-docskimmer/blob/main/requirements.txt#L2): Specify the tag, release/version, or branch of [docSkimmer theme](https://github.com/hfagerlund/mkdocs-docskimmer/releases) - (note: `master` branch contains the latest, unreleased changes since **v0.4.0**)
+
+  **examples**: <br>
   * install latest changes (ie. 'master' branch'):
   ```
   pip install git+https://github.com/hfagerlund/mkdocs-docskimmer.git@master
@@ -101,6 +101,11 @@ $ sudo docker container ls -a
 * Remove Docker image 'my-docskimmer' once finished:
 ```console
 $ sudo docker rmi -f my-docskimmer
+```
+
+* Debug Docker build (display output of commands not loaded from cache):
+```console
+$ sudo docker build --progress=plain --no-cache . -t my-docskimmer -f Dockerfile
 ```
 
 * Stop Docker:
