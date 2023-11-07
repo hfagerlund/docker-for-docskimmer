@@ -1,0 +1,10 @@
+site_name: docSkimmer theme
+theme:
+  name: docskimmer
+  include_search_page: true
+  search_index_only: false
+  static_templates:
+  - 404.html
+plugins: ['search']
+extra:
+    version: 0.4.0'
